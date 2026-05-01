@@ -96,7 +96,11 @@ export default function AuthenticatedLayout({ header, children }) {
             icon: <BookOutlined />,
             label: <Link href={route('admin.classes.index')}>{t('class.title')}</Link>,
         },
-        // Additional items based on activeRole can be injected here
+        {
+            key: 'admissions',
+            icon: <UserOutlined />,
+            label: <Link href={route('admin.admissions.index')}>{t('ppdb.title')}</Link>,
+        },
     ];
 
     return (
@@ -154,7 +158,8 @@ export default function AuthenticatedLayout({ header, children }) {
                         selectedKeys={[
                             route().current('dashboard') ? 'dashboard' : 
                             route().current('admin.academic-years.*') ? 'academic-years' : 
-                            route().current('admin.classes.*') ? 'classes' : ''
+                            route().current('admin.classes.*') ? 'classes' : 
+                            route().current('admin.admissions.*') ? 'admissions' : ''
                         ]}
                         items={navItems}
                         style={{ borderRight: 0, marginTop: 16 }}
@@ -187,7 +192,8 @@ export default function AuthenticatedLayout({ header, children }) {
                         selectedKeys={[
                             route().current('dashboard') ? 'dashboard' : 
                             route().current('admin.academic-years.*') ? 'academic-years' : 
-                            route().current('admin.classes.*') ? 'classes' : ''
+                            route().current('admin.classes.*') ? 'classes' : 
+                            route().current('admin.admissions.*') ? 'admissions' : ''
                         ]}
                         items={navItems}
                         style={{ borderRight: 0 }}

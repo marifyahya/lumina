@@ -53,6 +53,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/classes', [\App\Http\Controllers\Admin\ClassRoomController::class, 'index'])->name('classes.index');
         Route::post('/classes', [\App\Http\Controllers\Admin\ClassRoomController::class, 'store'])->name('classes.store');
         Route::delete('/classes/{class}', [\App\Http\Controllers\Admin\ClassRoomController::class, 'destroy'])->name('classes.destroy');
+
+        // PPDB / Admissions
+        Route::get('/admissions', [\App\Http\Controllers\Admin\PPDBController::class, 'index'])->name('admissions.index');
+        Route::get('/admissions/{registration}', [\App\Http\Controllers\Admin\PPDBController::class, 'show'])->name('admissions.show');
+        Route::post('/admissions/{registration}/approve', [\App\Http\Controllers\Admin\PPDBController::class, 'approve'])->name('admissions.approve');
+        Route::post('/admissions/{registration}/reject', [\App\Http\Controllers\Admin\PPDBController::class, 'reject'])->name('admissions.reject');
     });
 });
 
