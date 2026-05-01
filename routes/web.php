@@ -31,6 +31,11 @@ Route::post('/role/switch', function (\Illuminate\Http\Request $request) {
 
 Route::post('/language', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('language.switch');
 
+// Public PPDB Registration
+Route::get('/register/student', [\App\Http\Controllers\Public\RegistrationController::class, 'index'])->name('register.student');
+Route::post('/register/student', [\App\Http\Controllers\Public\RegistrationController::class, 'store'])->name('register.student.store');
+Route::get('/register/success/{registration}', [\App\Http\Controllers\Public\RegistrationController::class, 'success'])->name('register.success');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

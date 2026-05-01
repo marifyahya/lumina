@@ -21,7 +21,11 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        $activeYear = \App\Models\AcademicYear::where('is_active', true)->first();
+
+        return Inertia::render('Auth/Register', [
+            'activeYear' => $activeYear,
+        ]);
     }
 
     /**

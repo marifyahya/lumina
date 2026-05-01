@@ -120,7 +120,7 @@ export default function Welcome({ auth }) {
                                     {t('landing.hero_desc')}
                                 </Paragraph>
                                 <Space size="middle">
-                                    <Link href={route('register')}>
+                                    <Link href={route('register.student')}>
                                         <Button type="primary" size="large" style={{ height: 56, padding: '0 40px', fontSize: 18, fontWeight: 700 }}>
                                             {t('landing.apply_admission')}
                                         </Button>
