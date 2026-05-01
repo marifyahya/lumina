@@ -1,117 +1,132 @@
+import React, { useState } from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Form, Input, Button, Typography } from 'antd';
-import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
+import { Head, Link } from '@inertiajs/react';
+import { Button, Typography, Card, Space, Alert } from 'antd';
+import { 
+    TeamOutlined, 
+    SolutionOutlined,
+    ArrowRightOutlined,
+    InfoCircleOutlined 
+} from '@ant-design/icons';
 
-const { Title, Text } = Typography;
+import useTranslate from '@/hooks/useTranslate';
+
+const { Title, Text, Paragraph } = Typography;
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    });
-
-    const submit = () => {
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
-        });
-    };
+    const { t } = useTranslate();
+    const [regType, setRegType] = useState('Student');
 
     return (
         <GuestLayout>
-            <Head title="Register" />
+            <Head title={t('auth.create_account')} />
 
-            <div style={{ marginBottom: 24 }}>
-                <Title level={3} style={{ margin: 0, fontWeight: 800 }}>Create Account</Title>
-                <Text type="secondary">Join Lumina school management system</Text>
+            <div style={{ marginBottom: 32, textAlign: 'center' }}>
+                <Title level={3} style={{ margin: 0, fontWeight: 900, letterSpacing: -1 }}>{t('auth.create_account')}</Title>
+                <Text type="secondary">{t('auth.select_type')}</Text>
             </div>
 
-            <Form
-                layout="vertical"
-                onFinish={submit}
-                initialValues={data}
-            >
-                <Form.Item
-                    label="Full Name"
-                    validateStatus={errors.name ? 'error' : ''}
-                    help={errors.name}
-                    required
+            <Space direction="vertical" size="middle" style={{ width: '100%', marginBottom: 32 }}>
+                {/* Prospective Student Card */}
+                <Card 
+                    hoverable 
+                    onClick={() => setRegType('Student')}
+                    style={{ 
+                        borderRadius: 16, 
+                        border: regType === 'Student' ? '2px solid #0f172a' : '2px solid #f1f5f9',
+                        background: regType === 'Student' ? '#f8fafc' : '#fff',
+                        transition: 'all 0.2s'
+                    }}
                 >
-                    <Input 
-                        prefix={<UserOutlined className="text-slate-400" />} 
-                        placeholder="John Doe"
-                        size="large"
-                        value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
-                    />
-                </Form.Item>
+                    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+                        <div style={{ 
+                            width: 48, 
+                            height: 48, 
+                            background: regType === 'Student' ? '#0f172a' : '#f1f5f9', 
+                            borderRadius: 12, 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            color: regType === 'Student' ? '#fff' : '#64748b',
+                            fontSize: 20
+                        }}>
+                            <TeamOutlined />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <Title level={5} style={{ margin: 0 }}>{t('auth.student_title')}</Title>
+                            <Text type="secondary" style={{ fontSize: 13 }}>{t('auth.student_desc')}</Text>
+                        </div>
+                        {regType === 'Student' && <ArrowRightOutlined style={{ color: '#0f172a' }} />}
+                    </div>
+                </Card>
 
-                <Form.Item
-                    label="Email Address"
-                    validateStatus={errors.email ? 'error' : ''}
-                    help={errors.email}
-                    required
+                {/* Staff / Teacher Card */}
+                <Card 
+                    hoverable 
+                    onClick={() => setRegType('Staff')}
+                    style={{ 
+                        borderRadius: 16, 
+                        border: regType === 'Staff' ? '2px solid #0f172a' : '2px solid #f1f5f9',
+                        background: regType === 'Staff' ? '#f8fafc' : '#fff',
+                        transition: 'all 0.2s'
+                    }}
                 >
-                    <Input 
-                        prefix={<MailOutlined className="text-slate-400" />} 
-                        placeholder="john@example.com"
-                        size="large"
-                        value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
-                </Form.Item>
+                    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+                        <div style={{ 
+                            width: 48, 
+                            height: 48, 
+                            background: regType === 'Staff' ? '#0f172a' : '#f1f5f9', 
+                            borderRadius: 12, 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            color: regType === 'Staff' ? '#fff' : '#64748b',
+                            fontSize: 20
+                        }}>
+                            <SolutionOutlined />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <Title level={5} style={{ margin: 0 }}>{t('auth.staff_title')}</Title>
+                            <Text type="secondary" style={{ fontSize: 13 }}>{t('auth.staff_desc')}</Text>
+                        </div>
+                        {regType === 'Staff' && <ArrowRightOutlined style={{ color: '#0f172a' }} />}
+                    </div>
+                </Card>
+            </Space>
 
-                <Form.Item
-                    label="Password"
-                    validateStatus={errors.password ? 'error' : ''}
-                    help={errors.password}
-                    required
-                >
-                    <Input.Password
-                        prefix={<LockOutlined className="text-slate-400" />}
-                        placeholder="••••••••"
-                        size="large"
-                        value={data.password}
-                        onChange={(e) => setData('password', e.target.value)}
+            <div style={{ marginBottom: 32 }}>
+                {regType === 'Student' ? (
+                    <div style={{ textAlign: 'center' }}>
+                        <Alert
+                            message={t('auth.ppdb_notice_title')}
+                            description={t('auth.ppdb_notice_desc')}
+                            type="success"
+                            showIcon
+                            icon={<InfoCircleOutlined />}
+                            style={{ borderRadius: 12, marginBottom: 24, textAlign: 'left' }}
+                        />
+                        <Link href="#">
+                            <Button type="primary" size="large" block style={{ fontWeight: 700, height: 54, borderRadius: 12 }}>
+                                {t('auth.proceed_ppdb')}
+                            </Button>
+                        </Link>
+                    </div>
+                ) : (
+                    <Alert
+                        message={t('auth.staff_notice_title')}
+                        description={t('auth.staff_notice_desc')}
+                        type="info"
+                        showIcon
+                        style={{ borderRadius: 12 }}
                     />
-                </Form.Item>
+                )}
+            </div>
 
-                <Form.Item
-                    label="Confirm Password"
-                    validateStatus={errors.password_confirmation ? 'error' : ''}
-                    help={errors.password_confirmation}
-                    required
-                >
-                    <Input.Password
-                        prefix={<LockOutlined className="text-slate-400" />}
-                        placeholder="••••••••"
-                        size="large"
-                        value={data.password_confirmation}
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                    />
-                </Form.Item>
-
-                <Form.Item style={{ marginBottom: 0, marginTop: 12 }}>
-                    <Button 
-                        type="primary" 
-                        htmlType="submit" 
-                        size="large" 
-                        block 
-                        loading={processing}
-                        style={{ fontWeight: 700, height: 48 }}
-                    >
-                        Create Account
-                    </Button>
-                </Form.Item>
-                
-                <div style={{ marginTop: 24, textAlign: 'center' }}>
-                    <Text type="secondary" className="text-sm">
-                        Already have an account? <Link href={route('login')} className="font-bold text-slate-900">Sign in</Link>
-                    </Text>
-                </div>
-            </Form>
+            <div style={{ textAlign: 'center' }}>
+                <Text type="secondary" className="text-sm">
+                    {t('auth.already_have_account')} <Link href={route('login')} className="font-bold text-slate-900">{t('auth.sign_in')}</Link>
+                </Text>
+            </div>
         </GuestLayout>
     );
 }

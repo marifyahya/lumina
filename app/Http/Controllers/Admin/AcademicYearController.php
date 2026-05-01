@@ -31,7 +31,7 @@ class AcademicYearController extends Controller
             'is_active' => false,
         ]);
 
-        return redirect()->back()->with('message', 'Academic year created successfully.');
+        return redirect()->back()->with('message', __('academic.success_create'));
     }
 
     public function activate(AcademicYear $academicYear)
@@ -41,17 +41,17 @@ class AcademicYearController extends Controller
             $academicYear->update(['is_active' => true]);
         });
 
-        return redirect()->back()->with('message', 'Academic year activated successfully.');
+        return redirect()->back()->with('message', __('academic.success_activate'));
     }
 
     public function destroy(AcademicYear $academicYear)
     {
         if ($academicYear->is_active) {
-            return redirect()->back()->withErrors(['error' => 'Cannot delete an active academic year.']);
+            return redirect()->back()->withErrors(['error' => __('academic.err_active_delete')]);
         }
 
         $academicYear->delete();
 
-        return redirect()->back()->with('message', 'Academic year deleted successfully.');
+        return redirect()->back()->with('message', __('academic.success_delete'));
     }
 }

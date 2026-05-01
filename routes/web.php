@@ -29,6 +29,8 @@ Route::post('/role/switch', function (\Illuminate\Http\Request $request) {
     return back();
 })->middleware('auth')->name('role.switch');
 
+Route::post('/language', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('language.switch');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

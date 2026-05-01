@@ -40,6 +40,20 @@ class HandleInertiaRequests extends Middleware
                 ] : null,
                 'active_role' => session('active_role'),
             ],
+            'locale' => app()->getLocale(),
+            'translations' => $this->getTranslations(),
         ];
+    }
+
+    protected function getTranslations()
+    {
+        $locale = app()->getLocale();
+        $path = base_path("lang/$locale.json");
+        
+        if (file_exists($path)) {
+            return json_decode(file_get_contents($path), true);
+        }
+
+        return [];
     }
 }

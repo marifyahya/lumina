@@ -22,9 +22,12 @@ import {
     CalendarOutlined
 } from '@ant-design/icons';
 
+import useTranslate from '@/hooks/useTranslate';
+
 const { Title, Text } = Typography;
 
 export default function Index({ academicYears }) {
+    const { t } = useTranslate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { data, setData, post, processing, reset, errors } = useForm({
         year: '',
@@ -42,55 +45,55 @@ export default function Index({ academicYears }) {
             onSuccess: () => {
                 setIsModalOpen(false);
                 reset();
-                message.success('Academic year created successfully');
+                message.success(t('academic.success_create'));
             },
         });
     };
 
     const handleActivate = (id) => {
         router.patch(route('admin.academic-years.activate', id), {}, {
-            onSuccess: () => message.success('Academic year activated successfully'),
+            onSuccess: () => message.success(t('academic.success_activate')),
         });
     };
 
     const handleDelete = (id) => {
         router.delete(route('admin.academic-years.destroy', id), {
-            onSuccess: () => message.success('Academic year deleted successfully'),
-            onError: (errors) => message.error(errors.error || 'Failed to delete'),
+            onSuccess: () => message.success(t('academic.success_delete')),
+            onError: (errors) => message.error(t(errors.error) || t('Failed to delete')),
         });
     };
 
     const columns = [
         {
-            title: 'Academic Year',
+            title: t('academic.year'),
             dataIndex: 'year',
             key: 'year',
             render: (text) => <Text strong>{text}</Text>,
         },
         {
-            title: 'Semester',
+            title: t('academic.semester'),
             dataIndex: 'semester',
             key: 'semester',
             render: (semester) => (
                 <Tag color={semester === 'Odd' ? 'blue' : 'orange'}>
-                    {semester.toUpperCase()}
+                    {t(`academic.${semester.toLowerCase()}`).toUpperCase()}
                 </Tag>
             ),
         },
         {
-            title: 'Status',
+            title: t('common.status'),
             dataIndex: 'is_active',
             key: 'is_active',
             render: (isActive) => (
                 isActive ? (
-                    <Tag color="success" icon={<CheckCircleOutlined />}>ACTIVE</Tag>
+                    <Tag color="success" icon={<CheckCircleOutlined />}>{t('common.active').toUpperCase()}</Tag>
                 ) : (
-                    <Tag color="default">INACTIVE</Tag>
+                    <Tag color="default">{t('common.inactive').toUpperCase()}</Tag>
                 )
             ),
         },
         {
-            title: 'Actions',
+            title: t('common.actions'),
             key: 'actions',
             render: (_, record) => (
                 <Space size="middle">
@@ -101,15 +104,15 @@ export default function Index({ academicYears }) {
                             onClick={() => handleActivate(record.id)}
                             style={{ padding: 0 }}
                         >
-                            Activate
+                            {t('Activate')}
                         </Button>
                     )}
                     <Popconfirm
-                        title="Delete academic year?"
-                        description="Are you sure you want to delete this year?"
+                        title={t('academic.confirm_delete_title')}
+                        description={t('academic.confirm_delete_desc')}
                         onConfirm={() => handleDelete(record.id)}
-                        okText="Yes"
-                        cancelText="No"
+                        okText={t('common.yes')}
+                        cancelText={t('common.no')}
                         disabled={record.is_active}
                     >
                         <Button 
@@ -119,7 +122,7 @@ export default function Index({ academicYears }) {
                             disabled={record.is_active}
                             style={{ padding: 0 }}
                         >
-                            Delete
+                            {t('common.delete')}
                         </Button>
                     </Popconfirm>
                 </Space>
@@ -129,14 +132,14 @@ export default function Index({ academicYears }) {
 
     return (
         <AuthenticatedLayout
-            header="Academic Years Management"
+            header={t('academic.mgmt')}
         >
-            <Head title="Academic Years" />
+            <Head title={t('academic.title')} />
 
             <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <div>
-                    <Title level={4} style={{ margin: 0 }}>All Academic Years</Title>
-                    <Text type="secondary">Manage institution academic periods and active status.</Text>
+                    <Title level={4} style={{ margin: 0 }}>{t('academic.all')}</Title>
+                    <Text type="secondary">{t('academic.desc')}</Text>
                 </div>
                 <Button 
                     type="primary" 
@@ -144,7 +147,7 @@ export default function Index({ academicYears }) {
                     onClick={showModal}
                     size="large"
                 >
-                    Add Academic Year
+                    {t('academic.add')}
                 </Button>
             </div>
 
@@ -161,18 +164,18 @@ export default function Index({ academicYears }) {
                 title={
                     <Space>
                         <CalendarOutlined />
-                        <span>Create Academic Year</span>
+                        <span>{t('academic.create')}</span>
                     </Space>
                 }
                 open={isModalOpen}
                 onOk={handleSubmit}
                 onCancel={handleCancel}
                 confirmLoading={processing}
-                okText="Create"
+                okText={t('common.create')}
             >
                 <Form layout="vertical" style={{ marginTop: 24 }}>
                     <Form.Item 
-                        label="Year" 
+                        label={t('academic.year')} 
                         required 
                         validateStatus={errors.year ? 'error' : ''}
                         help={errors.year}
@@ -184,7 +187,7 @@ export default function Index({ academicYears }) {
                         />
                     </Form.Item>
                     <Form.Item 
-                        label="Semester" 
+                        label={t('academic.semester')} 
                         required
                         validateStatus={errors.semester ? 'error' : ''}
                         help={errors.semester}
@@ -193,8 +196,8 @@ export default function Index({ academicYears }) {
                             value={data.semester}
                             onChange={(value) => setData('semester', value)}
                             options={[
-                                { value: 'Odd', label: 'Odd' },
-                                { value: 'Even', label: 'Even' },
+                                { value: 'Odd', label: t('academic.odd') },
+                                { value: 'Even', label: t('academic.even') },
                             ]}
                         />
                     </Form.Item>

@@ -30,7 +30,7 @@ class ClassRoomController extends Controller
         $activeYear = AcademicYear::where('is_active', true)->first();
 
         if (!$activeYear) {
-            return redirect()->back()->withErrors(['error' => 'Please activate an academic year first.']);
+            return redirect()->back()->withErrors(['error' => __('class.err_no_active_year')]);
         }
 
         $request->validate([
@@ -46,12 +46,12 @@ class ClassRoomController extends Controller
             'academic_year_id' => $activeYear->id,
         ]);
 
-        return redirect()->back()->with('message', 'Class created successfully.');
+        return redirect()->back()->with('message', __('class.success_create'));
     }
 
     public function destroy(ClassRoom $class)
     {
         $class->delete();
-        return redirect()->back()->with('message', 'Class deleted successfully.');
+        return redirect()->back()->with('message', __('class.success_delete'));
     }
 }

@@ -10,14 +10,17 @@ import {
     MenuFoldOutlined,
     SettingOutlined,
     CalendarOutlined,
-    BookOutlined
+    BookOutlined,
+    GlobalOutlined
 } from '@ant-design/icons';
 import { Link, usePage, router } from '@inertiajs/react';
+import useTranslate from '@/hooks/useTranslate';
 
 const { Header, Sider, Content } = Layout;
 
 export default function AuthenticatedLayout({ header, children }) {
-    const { auth } = usePage().props;
+    const { t } = useTranslate();
+    const { auth, locale } = usePage().props;
     const user = auth.user;
     const roles = user.roles || [];
     const activeRole = auth.active_role || (roles.length > 0 ? roles[0] : null);
@@ -31,10 +34,16 @@ export default function AuthenticatedLayout({ header, children }) {
         });
     };
 
+    const handleLanguageChange = (lang) => {
+        router.post(route('language.switch'), { locale: lang }, {
+            preserveScroll: true,
+        });
+    };
+
     const userMenuItems = [
         {
             key: 'profile',
-            label: <Link href={route('profile.edit')}>Profile Settings</Link>,
+            label: <Link href={route('profile.edit')}>{t('common.profile')}</Link>,
             icon: <SettingOutlined />,
         },
         {
@@ -42,7 +51,7 @@ export default function AuthenticatedLayout({ header, children }) {
         },
         {
             key: 'logout',
-            label: 'Log Out',
+            label: t('common.logout'),
             icon: <LogoutOutlined />,
             danger: true,
             onClick: () => router.post(route('logout')),
@@ -56,21 +65,36 @@ export default function AuthenticatedLayout({ header, children }) {
         disabled: role === activeRole,
     }));
 
+    const languageMenuItems = [
+        {
+            key: 'en',
+            label: t('common.english'),
+            onClick: () => handleLanguageChange('en'),
+            disabled: locale === 'en',
+        },
+        {
+            key: 'id',
+            label: t('common.indonesian'),
+            onClick: () => handleLanguageChange('id'),
+            disabled: locale === 'id',
+        },
+    ];
+
     const navItems = [
         {
             key: 'dashboard',
             icon: <DashboardOutlined />,
-            label: <Link href={route('dashboard')}>Dashboard</Link>,
+            label: <Link href={route('dashboard')}>{t('common.dashboard')}</Link>,
         },
         {
             key: 'academic-years',
             icon: <CalendarOutlined />,
-            label: <Link href={route('admin.academic-years.index')}>Academic Years</Link>,
+            label: <Link href={route('admin.academic-years.index')}>{t('academic.title')}</Link>,
         },
         {
             key: 'classes',
             icon: <BookOutlined />,
-            label: <Link href={route('admin.classes.index')}>Classes</Link>,
+            label: <Link href={route('admin.classes.index')}>{t('class.title')}</Link>,
         },
         // Additional items based on activeRole can be injected here
     ];
@@ -202,6 +226,15 @@ export default function AuthenticatedLayout({ header, children }) {
                         </div>
 
                         <Space size="large">
+                            <Dropdown menu={{ items: languageMenuItems }} trigger={['click']}>
+                                <Button size="small" type="text" style={{ fontSize: 12, fontWeight: 600 }}>
+                                    <Space>
+                                        <GlobalOutlined style={{ fontSize: 14 }} />
+                                        {locale === 'en' ? 'EN' : 'ID'}
+                                    </Space>
+                                </Button>
+                            </Dropdown>
+
                             {roles.length > 1 && (
                                 <Dropdown menu={{ items: roleMenuItems }} trigger={['click']}>
                                     <Button size="small" style={{ fontSize: 11, fontWeight: 700, borderRadius: 6 }}>

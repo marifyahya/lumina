@@ -25,9 +25,12 @@ import {
     InfoCircleOutlined
 } from '@ant-design/icons';
 
+import useTranslate from '@/hooks/useTranslate';
+
 const { Title, Text } = Typography;
 
 export default function Index({ classes, teachers, activeYear }) {
+    const { t } = useTranslate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { data, setData, post, processing, reset, errors } = useForm({
         name: '',
@@ -46,32 +49,32 @@ export default function Index({ classes, teachers, activeYear }) {
             onSuccess: () => {
                 setIsModalOpen(false);
                 reset();
-                message.success('Class created successfully');
+                message.success(t('class.success_create'));
             },
         });
     };
 
     const handleDelete = (id) => {
         router.delete(route('admin.classes.destroy', id), {
-            onSuccess: () => message.success('Class deleted successfully'),
+            onSuccess: () => message.success(t('class.success_delete')),
         });
     };
 
     const columns = [
         {
-            title: 'Class Name',
+            title: t('class.name'),
             dataIndex: 'name',
             key: 'name',
             render: (text) => <Text strong>{text}</Text>,
         },
         {
-            title: 'Level',
+            title: t('class.level'),
             dataIndex: 'level',
             key: 'level',
-            render: (level) => <Tag color="blue">Level {level}</Tag>,
+            render: (level) => <Tag color="blue">{t('class.level')} {level}</Tag>,
         },
         {
-            title: 'Homeroom Teacher',
+            title: t('class.homeroom'),
             dataIndex: 'teacher',
             key: 'teacher',
             render: (teacher) => (
@@ -79,23 +82,23 @@ export default function Index({ classes, teachers, activeYear }) {
                     <Space>
                         <UserOutlined style={{ color: '#94a3b8' }} />
                         <Text>{teacher.user.name}</Text>
-                        <Text type="secondary" style={{ fontSize: 12 }}>({teacher.nip || 'No NIP'})</Text>
+                        <Text type="secondary" style={{ fontSize: 12 }}>({teacher.nip || t('class.no_nip')})</Text>
                     </Space>
                 ) : (
-                    <Text type="warning italic">Not Assigned</Text>
+                    <Text type="warning italic">{t('class.not_assigned')}</Text>
                 )
             ),
         },
         {
-            title: 'Actions',
+            title: t('common.actions'),
             key: 'actions',
             render: (_, record) => (
                 <Popconfirm
-                    title="Delete class?"
-                    description="Are you sure you want to delete this class?"
+                    title={t('class.confirm_delete_title')}
+                    description={t('class.confirm_delete_desc')}
                     onConfirm={() => handleDelete(record.id)}
-                    okText="Yes"
-                    cancelText="No"
+                    okText={t('common.yes')}
+                    cancelText={t('common.no')}
                 >
                     <Button 
                         type="link" 
@@ -104,7 +107,7 @@ export default function Index({ classes, teachers, activeYear }) {
                         icon={<DeleteOutlined />}
                         style={{ padding: 0 }}
                     >
-                        Delete
+                        {t('common.delete')}
                     </Button>
                 </Popconfirm>
             ),
@@ -113,16 +116,16 @@ export default function Index({ classes, teachers, activeYear }) {
 
     return (
         <AuthenticatedLayout
-            header="Class Management"
+            header={t('class.mgmt')}
         >
-            <Head title="Classes" />
+            <Head title={t('class.title')} />
 
             {!activeYear ? (
                 <Alert
-                    message="Active Academic Year Required"
+                    message={t('class.err_no_active_year')}
                     description={
                         <span>
-                            No active academic year found. Please <Text strong onClick={() => router.get(route('admin.academic-years.index'))} style={{ cursor: 'pointer', textDecoration: 'underline' }}>activate an academic year</Text> before managing classes.
+                            {t('class.err_no_active_year_desc')}
                         </span>
                     }
                     type="warning"
@@ -134,9 +137,9 @@ export default function Index({ classes, teachers, activeYear }) {
                     <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                         <div>
                             <Title level={4} style={{ margin: 0 }}>
-                                Classes for {activeYear.year} ({activeYear.semester})
+                                {t('class.list_for')} {activeYear.year} ({t(`academic.${activeYear.semester.toLowerCase()}`)})
                             </Title>
-                            <Text type="secondary">Organize students into groups and assign homeroom teachers.</Text>
+                            <Text type="secondary">{t('class.desc')}</Text>
                         </div>
                         <Button 
                             type="primary" 
@@ -144,13 +147,13 @@ export default function Index({ classes, teachers, activeYear }) {
                             onClick={showModal}
                             size="large"
                         >
-                            Add Class
+                            {t('class.add')}
                         </Button>
                     </div>
 
                     <Card bordered={false} className="shadow-sm" bodyStyle={{ padding: classes.length === 0 ? 64 : 0 }}>
                         {classes.length === 0 ? (
-                            <Empty description="No classes found for the active year." />
+                            <Empty description={t('class.empty')} />
                         ) : (
                             <Table 
                                 columns={columns} 
@@ -167,18 +170,18 @@ export default function Index({ classes, teachers, activeYear }) {
                 title={
                     <Space>
                         <BookOutlined />
-                        <span>Create New Class</span>
+                        <span>{t('class.create')}</span>
                     </Space>
                 }
                 open={isModalOpen}
                 onOk={handleSubmit}
                 onCancel={handleCancel}
                 confirmLoading={processing}
-                okText="Create Class"
+                okText={t('class.create')}
             >
                 <Form layout="vertical" style={{ marginTop: 24 }}>
                     <Form.Item 
-                        label="Class Name" 
+                        label={t('class.name')} 
                         required 
                         validateStatus={errors.name ? 'error' : ''}
                         help={errors.name}
@@ -190,7 +193,7 @@ export default function Index({ classes, teachers, activeYear }) {
                         />
                     </Form.Item>
                     <Form.Item 
-                        label="Level" 
+                        label={t('class.level')} 
                         required
                         validateStatus={errors.level ? 'error' : ''}
                         help={errors.level}
@@ -198,16 +201,16 @@ export default function Index({ classes, teachers, activeYear }) {
                         <Select
                             value={data.level}
                             onChange={(value) => setData('level', value)}
-                            options={Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: `Level ${i + 1}` }))}
+                            options={Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: `${t('class.level')} ${i + 1}` }))}
                         />
                     </Form.Item>
                     <Form.Item 
-                        label="Homeroom Teacher" 
+                        label={t('class.homeroom')} 
                         validateStatus={errors.teacher_id ? 'error' : ''}
                         help={errors.teacher_id}
                     >
                         <Select
-                            placeholder="Select a teacher"
+                            placeholder={t('class.select_teacher')}
                             value={data.teacher_id}
                             onChange={(value) => setData('teacher_id', value)}
                             allowClear
@@ -216,7 +219,7 @@ export default function Index({ classes, teachers, activeYear }) {
                         >
                             {teachers.map(teacher => (
                                 <Select.Option key={teacher.id} value={teacher.id}>
-                                    {teacher.user.name} ({teacher.nip || 'No NIP'})
+                                    {teacher.user.name} ({teacher.nip || t('class.no_nip')})
                                 </Select.Option>
                             ))}
                         </Select>
