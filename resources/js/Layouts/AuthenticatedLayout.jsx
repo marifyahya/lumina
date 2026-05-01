@@ -8,7 +8,9 @@ import {
     SwapOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
-    SettingOutlined
+    SettingOutlined,
+    CalendarOutlined,
+    BookOutlined
 } from '@ant-design/icons';
 import { Link, usePage, router } from '@inertiajs/react';
 
@@ -59,6 +61,16 @@ export default function AuthenticatedLayout({ header, children }) {
             key: 'dashboard',
             icon: <DashboardOutlined />,
             label: <Link href={route('dashboard')}>Dashboard</Link>,
+        },
+        {
+            key: 'academic-years',
+            icon: <CalendarOutlined />,
+            label: <Link href={route('admin.academic-years.index')}>Academic Years</Link>,
+        },
+        {
+            key: 'classes',
+            icon: <BookOutlined />,
+            label: <Link href={route('admin.classes.index')}>Classes</Link>,
         },
         // Additional items based on activeRole can be injected here
     ];
@@ -115,7 +127,11 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                     <Menu
                         mode="inline"
-                        selectedKeys={[route().current('dashboard') ? 'dashboard' : '']}
+                        selectedKeys={[
+                            route().current('dashboard') ? 'dashboard' : 
+                            route().current('admin.academic-years.*') ? 'academic-years' : 
+                            route().current('admin.classes.*') ? 'classes' : ''
+                        ]}
                         items={navItems}
                         style={{ borderRight: 0, marginTop: 16 }}
                     />
@@ -144,7 +160,11 @@ export default function AuthenticatedLayout({ header, children }) {
                 >
                     <Menu
                         mode="inline"
-                        selectedKeys={[route().current('dashboard') ? 'dashboard' : '']}
+                        selectedKeys={[
+                            route().current('dashboard') ? 'dashboard' : 
+                            route().current('admin.academic-years.*') ? 'academic-years' : 
+                            route().current('admin.classes.*') ? 'classes' : ''
+                        ]}
                         items={navItems}
                         style={{ borderRight: 0 }}
                     />
