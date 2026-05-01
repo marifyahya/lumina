@@ -10,6 +10,41 @@ Lumina is a premium, modern School Management System (SIS) designed for efficien
 - **Dockerized Environment**: Fully containerized setup for consistent development across platforms.
 - **Smart Developer Experience**: Optimized with Vite Watch Mode and HMR inside Docker.
 
+## 👥 System Actors
+
+Lumina is designed with a comprehensive role-based access control system for 7 distinct actors:
+
+- **Admin**: Manages master data, users, and verifies student registrations.
+- **Teacher**: Manages class schedules, attendance, and student grading.
+- **Student**: Accesses academic records, schedules, and report cards.
+- **Parent**: Monitors child's progress, attendance, and financial obligations.
+- **Finance**: Manages tuition (SPP), billing, and payment records.
+- **Prospective Student**: Handles the New Student Admission (PPDB) process.
+- **Principal**: Accesses executive dashboards for school-wide performance and financial health.
+
+## 🗺 Development Roadmap
+
+### Phase 1: Foundation (Current)
+- [x] Project architecture & Docker setup.
+- [x] Role-Based Access Control (RBAC) foundation.
+- [x] Master Data CRUD (Academic Years, Classes).
+- [x] Multi-language infrastructure.
+
+### Phase 2: Admission & Academic Core
+- [ ] New Student Admission (PPDB) flow.
+- [ ] Subject & Schedule management.
+- [ ] Document upload & verification system.
+
+### Phase 3: Grading & Attendance
+- [ ] Daily attendance tracking.
+- [ ] Dynamic grading formulas & automated report cards.
+- [ ] Student & Parent portals.
+
+### Phase 4: Finance & Analytics
+- [ ] Tuition (SPP) billing & payment gateway integration.
+- [ ] Executive dashboards for Principal.
+- [ ] Financial health reporting.
+
 ## 🛠 Tech Stack
 
 - **Backend**: Laravel 13 (PHP 8.3)
@@ -74,17 +109,6 @@ Lumina uses a dedicated Vite container for Hot Module Replacement (HMR).
 - **Manual Build**: `docker compose exec app npm run build`
 - **Stop Containers**: `docker compose down`
 
-## 🌍 Localization
-
-Lumina uses a structured translation system. To add or modify translations:
-- English: `lang/en.json`
-- Indonesian: `lang/id.json`
-
-Frontend components use the `useTranslate` hook:
-```javascript
-const { t } = useTranslate();
-console.log(t('common.welcome'));
-```
 
 ## 📄 License
 
